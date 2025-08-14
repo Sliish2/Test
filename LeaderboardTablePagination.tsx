@@ -2,6 +2,13 @@ import React from "react";
 
 import styles from "../leaderboards.module.scss";
 
+type Test = {
+  entriesPerPage: test;
+  length: number;
+  handlePagination: (arg0: number) => void;
+  currentPage: number;
+};
+
 type Props = {
   entriesPerPage: number;
   length: number;
