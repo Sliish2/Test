@@ -3,6 +3,12 @@ import { LeaderboardEntryType } from "../actions";
 
 import styles from "../leaderboards.module.scss";
 
+type Test = {
+  leaderboardPositionData: Test;
+  entityType?: test;
+  positionWithinTable?: number;
+};
+
 type Props = {
   leaderboardPositionData: LeaderboardEntryType;
   entityType?: string;
