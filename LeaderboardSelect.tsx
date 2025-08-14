@@ -1,5 +1,7 @@
 import styles from "../leaderboards.module.scss";
 
+TEST
+
 const SELECT_OPTIONS_TITLE: any = {
   globalUsers: "Worldwide Students",
   globalSchools: "Worldwide Schools",
