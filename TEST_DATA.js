@@ -1,14 +1,5 @@
 export default [
   {
-    _id: "66c75c9170faee075d700011",
-    competitionId: "WWGC_TEST",
-    entityId: "B2HDXmqJsRQE8PyWq",
-    activePoints: 500,
-    amount: 500,
-    country: "GB",
-    name: "QuickTurtle1880",
-  },
-  {
     _id: "66c75c9170faee075d700073122",
     competitionId: "WWGC_TEST",
     entityId: "LhQit3PwHpnpCsQkX",
