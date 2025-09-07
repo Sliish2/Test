@@ -1,0 +1,5 @@
+# traefik_dynamic.yml
+tls:
+  certificates:
+    - certFile: /certs/cert.pem
+      keyFile: /certs/key.pem
