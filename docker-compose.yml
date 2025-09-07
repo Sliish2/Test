@@ -1,84 +1,51 @@
 version: "3.8"
 
-networks:
-  traefik-public:
-    name: traefik-public
-
-volumes:
-  n8n-data:
-  traefik-logs:
-
 services:
-  traefik:
-    image: traefik:v3.0
+  postgres:
+    image: postgres:15-alpine
+    container_name: n8n-postgres
     restart: unless-stopped
-    command:
-      - --entryPoints.web.address=:80
-      - --entryPoints.websecure.address=:443
-      - --providers.docker=true
-      - --providers.docker.exposedByDefault=false
-      - --providers.file.filename=/etc/traefik/traefik_dynamic.yml   # <—
-      - --api.dashboard=true
-      - --api.insecure=true
-      - --accesslog=true
-    ports:
-      - "80:80"
-      - "443:443"                   # <—
-      - "8080:8080"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-n8n}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-n8n}
+      POSTGRES_DB: ${POSTGRES_DB:-n8n}
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./traefik_dynamic.yml:/etc/traefik/traefik_dynamic.yml:ro   # <—
-      - ./localhost+1.pem:/certs/cert.pem:ro                        # <—
-      - ./localhost+1-key.pem:/certs/key.pem:ro                     # <—
-    networks:
-      - traefik-public
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-n8n} -d ${POSTGRES_DB:-n8n}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   n8n:
-    image: docker.n8n.io/n8nio/n8n:stable
-    container_name: se-n8n
+    image: n8nio/n8n:latest
+    container_name: n8n
     restart: unless-stopped
-    environment:
-      # mirror prod-style run args
-      - GENERIC_TIMEZONE=${GENERIC_TIMEZONE}
-      - TZ=${TZ}
-      # For local we keep webhook/base URL as http
-      - WEBHOOK_URL=http://n8n.${DOMAIN}/
-      # Helpful for n8n url generation
-      - N8N_HOST=n8n.${DOMAIN}
-      - N8N_PORT=5678
-      - N8N_PROTOCOL=http
-      # optional basic auth for local
-      - N8N_BASIC_AUTH_ACTIVE=${N8N_BASIC_AUTH_ACTIVE}
-      - N8N_BASIC_AUTH_USER=${N8N_BASIC_AUTH_USER}
-      - N8N_BASIC_AUTH_PASSWORD=${N8N_BASIC_AUTH_PASSWORD}
-      # pass browserless token so n8n nodes can use {{$env.BROWSERLESS_TOKEN}}
-      - BROWSERLESS_TOKEN=${BROWSERLESS_TOKEN}
-    volumes:
-      - n8n-data:/home/node/.n8n
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.n8n.rule=Host(`n8n.${DOMAIN}`)
-      - traefik.http.routers.n8n.entrypoints=websecure   # <—
-      - traefik.http.routers.n8n.tls=true    
-      - traefik.http.services.n8n.loadbalancer.server.port=5678
-    networks:
-      - traefik-public
+    ports:
+      - "${N8N_PORT:-5678}:${N8N_PORT:-5678}"
     depends_on:
-      - browserless
-
-  browserless:
-    image: ghcr.io/browserless/chromium:latest
-    container_name: se-browserless
-    restart: unless-stopped
+      postgres:
+        condition: service_healthy
     environment:
-      - TOKEN=${BROWSERLESS_TOKEN}
-      - CONCURRENT=${BROWSERLESS_CONCURRENT}
-      - HEALTH=true
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.browserless.rule=Host(`browserless.${DOMAIN}`)
-      - traefik.http.routers.browserless.entrypoints=websecure   # <—
-      - traefik.http.routers.browserless.tls=true  
-      - traefik.http.services.browserless.loadbalancer.server.port=3000
-    networks:
-      - traefik-public
+      - N8N_HOST=${N8N_HOST:-localhost}
+      - N8N_PORT=${N8N_PORT:-5678}
+      - N8N_PROTOCOL=${N8N_PROTOCOL:-http}
+      - WEBHOOK_URL=${WEBHOOK_URL:-http://localhost:5678/}
+      - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY:-local-development-not-secure}
+      - N8N_SECURE_COOKIE=${N8N_SECURE_COOKIE:-false}
+      - GENERIC_TIMEZONE=${GENERIC_TIMEZONE:-UTC}
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=${POSTGRES_DB:-n8n}
+      - DB_POSTGRESDB_USER=${POSTGRES_USER:-n8n}
+      - DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD:-n8n}
+      - NODE_ENV=production
+      - N8N_DIAGNOSTICS_ENABLED=false
+    volumes:
+      - n8n_data:/home/node/.n8n
+
+volumes:
+  n8n_data:
+  postgres_data:
+
