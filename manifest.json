@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "Smart Scraper",
+  "version": "0.1.0",
+  "description": "One-button, privacy-friendly web scraping with live preview and export.",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "tabs"
+  ],
+  "optional_host_permissions": [
+    "<all_urls>"
+  ],
+  "action": {
+    "default_popup": "scraper_popup.html",
+    "default_title": "Smart Scraper"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["smart_scrape_content.js"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
