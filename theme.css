@@ -1,0 +1,10 @@
+:root[data-theme="light"] {
+  --bg: #f5f7ff;
+  --panel: #ffffff;
+  --text: #111827;
+  --muted: #5b6b8a;
+  --accent: #355cff;
+  --border: rgba(0,0,0,0.1);
+  --input: #f2f4fb;
+  background: #eef2ff;
+}

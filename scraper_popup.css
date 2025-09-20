@@ -1,0 +1,246 @@
+*{box-sizing:border-box;margin:0;padding:0}
+
+/* Layout sizing tuned for Chrome popup */
+body{width:380px;min-height:520px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0b0b0b;color:#e7e7e7}
+.container{margin:8px;padding:14px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:12px;backdrop-filter:blur(12px);box-shadow:0 8px 24px rgba(0,0,0,.25)}
+
+header{margin-bottom:8px;text-align:center}
+header h1{font-size:16px;font-weight:700;color:#fff}
+header .sub{font-size:11px;color:#a1a1a1}
+
+.actions{display:flex;gap:8px;margin:10px 0}
+.primary,.secondary{flex:1;padding:9px 10px;border-radius:10px;border:1px solid rgba(255,255,255,0.14);cursor:pointer;font-weight:600;transition:all .18s ease}
+.primary{background:#ffffff;color:#0b0b0b}
+.primary:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(255,255,255,.15)}
+.secondary{background:rgba(255,255,255,0.08);color:#e7e7e7}
+.secondary:hover{background:rgba(255,255,255,0.14);backdrop-filter:blur(8px);transform:translateY(-1px)}
+
+.info{font-size:11px;color:#c5c5c5;margin-bottom:8px}
+.error{margin-top:8px;padding:8px;border-radius:10px;background:rgba(255,77,77,.1);border:1px solid rgba(255,77,77,.35);color:#ffb0b0;font-size:12px}
+.summary{padding:8px;border-radius:10px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#d8d8d8;font-size:12px;margin:8px 0}
+
+.preview{margin-top:8px}
+.preview-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.preview-header .export button{min-width:0}
+.table-wrap{max-height:230px;overflow:auto;border:1px solid rgba(255,255,255,0.12);border-radius:10px;background:rgba(255,255,255,0.03)}
+#previewTable{width:100%;border-collapse:collapse;font-size:12px;color:#eaeaea}
+#previewTable th,#previewTable td{padding:8px;border-bottom:1px solid rgba(255,255,255,0.06);vertical-align:top}
+#previewTable th{position:sticky;top:0;background:rgba(255,255,255,0.06);backdrop-filter:blur(6px);font-weight:700;color:#fff}
+#previewTable tbody tr:hover{background:rgba(255,255,255,0.06)}
+
+/* Refine panel */
+.refine{margin-top:8px;padding:10px;border:1px solid rgba(255,255,255,0.12);border-radius:12px;background:rgba(255,255,255,0.04)}
+.refine-row{display:flex;gap:8px;flex-wrap:wrap}
+.refine-card{flex:1 1 100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:10px;transition:all .2s ease;min-width:0}
+.refine-card:hover{background:rgba(255,255,255,0.08);backdrop-filter:blur(8px);box-shadow:0 6px 18px rgba(0,0,0,.25)}
+.refine-title{font-weight:700;margin-bottom:8px;color:#fff}
+.columns-list{display:flex;flex-direction:column;gap:6px;max-height:160px;overflow:auto}
+.col-item{display:flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:6px;background:rgba(255,255,255,0.04);transition:all .18s ease}
+.col-item:hover{background:rgba(255,255,255,0.10);backdrop-filter:blur(6px)}
+.col-name{flex:1;font-size:12px;color:#eaeaea}
+.col-actions{display:flex;gap:6px}
+.icon-btn{border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.06);color:#e7e7e7;border-radius:8px;padding:4px 6px;cursor:pointer;transition:all .18s ease}
+.icon-btn:hover{background:rgba(255,255,255,0.12);transform:translateY(-1px)}
+
+.split-options{display:flex;flex-direction:column;gap:6px;color:#dcdcdc;overflow:hidden}
+.split-item{font-size:12px}
+.split-sub{margin-left:22px;margin-top:4px;display:none}
+.split-sub.active{display:block}
+.split-sub label{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.split-sub input, .split-sub select{flex:0 0 130px;padding:6px;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.06);color:#fff;border-radius:8px;min-width:0}
+.export-actions{margin-top:8px;display:flex;justify-content:flex-end}
+
+/* Loading States */
+.loading {
+    position: relative;
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid rgba(255,255,255,0.2);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 0.8s linear infinite;
+    z-index: 10;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Progress Bar */
+.progress-container {
+    width: 100%;
+    height: 3px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 2px;
+    overflow: hidden;
+    margin: 8px 0;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #4fc3f7, #29b6f6);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+    width: 0%;
+}
+
+.progress-bar.indeterminate {
+    width: 100%;
+    background: linear-gradient(90deg, transparent, #4fc3f7, transparent);
+    animation: progress-indeterminate 1.5s infinite;
+}
+
+@keyframes progress-indeterminate {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* Enhanced Tooltips */
+.tooltip {
+    position: relative;
+}
+
+.tooltip::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 130%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.9);
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.tooltip::after {
+    content: '';
+    position: absolute;
+    bottom: 122%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 4px solid transparent;
+    border-top-color: rgba(0,0,0,0.9);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.tooltip:hover::before,
+.tooltip:hover::after {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Data Type Indicators */
+.data-type-indicator {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-left: 6px;
+}
+
+.data-type-indicator.email { background: #ff9800; }
+.data-type-indicator.phone { background: #4caf50; }
+.data-type-indicator.url { background: #2196f3; }
+.data-type-indicator.date { background: #9c27b0; }
+.data-type-indicator.currency { background: #4caf50; }
+.data-type-indicator.number { background: #00bcd4; }
+.data-type-indicator.rating { background: #ffc107; }
+.data-type-indicator.text { background: rgba(255,255,255,0.3); }
+
+/* Enhanced Cards */
+.data-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 12px;
+    padding: 12px;
+    margin: 8px 0;
+    transition: all 0.3s ease;
+}
+
+.data-card:hover {
+    background: rgba(255,255,255,0.1);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+.data-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.data-card-title {
+    font-weight: 600;
+    color: #fff;
+    font-size: 14px;
+}
+
+.data-card-meta {
+    font-size: 12px;
+    color: #a1a1a1;
+}
+
+/* Stats Display */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 8px;
+    margin: 8px 0;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 8px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.08);
+}
+
+.stat-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: #4fc3f7;
+}
+
+.stat-label {
+    font-size: 11px;
+    color: #a1a1a1;
+    margin-top: 2px;
+}
+
+/* Improved Buttons */
+.btn-group {
+    display: flex;
+    gap: 4px;
+}
+
+.btn-group .secondary {
+    flex: none;
+    padding: 8px 12px;
+    font-size: 12px;
+}
+
+/* Scrollbar minimal */
+.table-wrap::-webkit-scrollbar,.columns-list::-webkit-scrollbar{width:8px;height:8px}
+.table-wrap::-webkit-scrollbar-thumb,.columns-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.18);border-radius:8px}
+.table-wrap::-webkit-scrollbar-track,.columns-list::-webkit-scrollbar-track{background:transparent}
